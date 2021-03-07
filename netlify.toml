@@ -4,3 +4,5 @@ functions = "./functions"
 [[redirects]]
 from = "/youtube/*"
 to = "/.netlify/functions/youtube/:splat"
+status = 200
+force = true
