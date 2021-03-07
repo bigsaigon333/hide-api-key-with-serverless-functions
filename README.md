@@ -8,15 +8,19 @@ serveless functions 중 Netlify Functions를 활용하였습니다. 따라서 ne
 
 1. netlify 에 github repository를 등록한다.
 
-2. netlify 에 환경변수를 설정한다
-
-   ```javascript
-   // 예시
-   API_KEY = Yousdfjidsof - asfdliaj;
-   HOST = bigsaigon333.github.io; // 또는 *
+2. netlify 에 환경변수를 설정한다.
+   
+※ 환경변수를 설정한 후에는 반드시 deploy를 하여야 합니다. 새로이 deploy한 후에 변경된 환경변수가 적용됩니다.
+   
    ```
+   // 예시
+   API_KEY = Yousdfjidsof-asfdliaj
+   HOST = https://bigsaigon333.github.io // *, http://localhost:5500, http://127.0.0.1:5500 등도 가능
+```
+   
+※ HOST는 하나만 설정할 수 있습니다. 따라서, 두군데 이상을 설정하고자 하는 경우에는 \* 로 하여야 합니다.
 
-   **끗**
+**끗**
 
 ### EndPoint
 
@@ -24,10 +28,10 @@ serveless functions 중 Netlify Functions를 활용하였습니다. 따라서 ne
 https://my-netlify-site-name.netlify.app/youtube
 
 // 예시
-https:// bigsaigon333.netlify.app/youtube
+https://bigsaigon333.netlify.app/youtube
 ```
 
-### 사용법 예시
+### Client-Side 사용법 예시
 
 ```javascript
 try {
@@ -36,7 +40,7 @@ try {
   // 기존
   // const URL = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&&q=${query}}&key=${YOUR_OWN_API_KEY}`;
 
-  const response = await fetch(URL(query));
+  const response = await fetch(URL);
 
   if (!response.ok) {
     throw new Error(response.statusText);
@@ -46,6 +50,8 @@ try {
   const { nextPageToken, items } = body;
 
   // write a code below that you want to do here!
+  //
+  //
 } catch (error) {
   console.error(error);
 }
