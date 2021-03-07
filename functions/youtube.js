@@ -4,7 +4,7 @@ const querystring = require("querystring");
 exports.handler = async (event) => {
   const { path, queryStringParameters } = event;
 
-  const ENDPOINT = "https://www.googleapis.com/youtube/v3";
+  const YOUTUBE_ENDPOINT = "https://www.googleapis.com/youtube/v3";
   const apiMethod = path.split("/").pop();
   const parameters = querystring.stringify({
     ...queryStringParameters,
@@ -16,22 +16,31 @@ exports.handler = async (event) => {
   };
 
   try {
-    const URI = `${ENDPOINT}/${apiMethod}?${parameters}`;
+    const URI = `${YOUTUBE_ENDPOINT}/${apiMethod}?${parameters}`;
     const response = await fetch(URI);
-    const json = await response.json();
+    const body = await response.json();
+
+    if (body.error) {
+      return {
+        statusCode: body.error.code,
+        ok: false,
+        headers,
+        body: JSON.stringify(body, null, " "),
+      };
+    }
 
     return {
       statusCode: 200,
       ok: true,
       headers,
-      body: JSON.stringify(json),
+      body: JSON.stringify(body, null, " "),
     };
   } catch (error) {
     return {
-      statusCode: 404,
-      statusText: error.message,
+      statusCode: 400,
       ok: false,
       headers,
+      body: JSON.stringify(error, null, " "),
     };
   }
 };
