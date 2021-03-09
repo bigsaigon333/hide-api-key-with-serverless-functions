@@ -1,4 +1,4 @@
-const fetchDummySearchData = require("../dummyfetchData.js");
+const fetchDummySearchData = require("../dummy/fetchData.js");
 
 exports.handler = async (event) => {
   const headers = {
