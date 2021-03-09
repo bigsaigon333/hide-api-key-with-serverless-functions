@@ -1,14 +1,13 @@
 const fetchDummySearchData = require("../dummy/fetchData.js");
 
-exports.handler = async (event) => {
+exports.handler = async () => {
   const headers = {
     "Access-Control-Allow-Origin": process.env.HOST,
     Vary: "Origin",
   };
 
   try {
-    const response = await fetchDummySearchData();
-    const body = await response.json();
+    const body = await fetchDummySearchData();
 
     console.log(body);
 
