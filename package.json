@@ -1,6 +1,6 @@
 {
   "name": "hide-api-key-with-serverless-functions",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "main": "index.js",
   "repository": "https://github.com/bigsaigon333/hide-api-key-with-serverless-functions.git",
   "author": "bigsaigon333 <likepeppermint@gmail.com>",
