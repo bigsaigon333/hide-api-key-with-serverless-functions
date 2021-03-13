@@ -8,6 +8,18 @@ status = 200
 force = true
 
 [[redirects]]
+from = "/youtube/v3/dummy/*"
+to = "/.netlify/functions/dummy/:splat"
+status = 200
+force = true
+
+[[redirects]]
+from = "/youtube/v3/*"
+to = "/.netlify/functions/youtube/:splat"
+status = 200
+force = true
+
+[[redirects]]
 from = "/youtube/*"
 to = "/.netlify/functions/youtube/:splat"
 status = 200
