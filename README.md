@@ -6,7 +6,7 @@
 
 serveless functions 중 Netlify Functions를 활용하였습니다. 따라서 netlify 계정이 반드시 필요합니다. (netlify sign up은 무료입니다)
 
-
+<br>
 
 ### 1. 설정방법
 
@@ -15,7 +15,7 @@ serveless functions 중 Netlify Functions를 활용하였습니다. 따라서 ne
 2. **netlify 에 github repository를 등록합니다.**
 
    - [Netlify signup 링크](https://app.netlify.com/signup)
-   - fork한 repository 와 main 브랜치를 선택하며, 이외의 설정(Build Command, Publish Directory)은 공란으로 두세요. 
+   - fork한 repository 와 main 브랜치를 선택하며, 이외의 설정(Build Command, Publish Directory)은 공란으로 두세요.
      (Functions directory 설정은 netlify.toml에서 하고 있으므로 신경쓰지 않아도 됩니다.)
 
 3. **netlify 에 환경변수를 설정합니다.**
@@ -35,7 +35,7 @@ serveless functions 중 Netlify Functions를 활용하였습니다. 따라서 ne
 <img src="https://images.velog.io/images/bigsaigon333/post/bf20c3a5-deab-410c-9042-deffc45d6459/Untitled%204.png" style="zoom:67%;" />
 ⇒ 이로써 설정을 모두 마쳤습니다. 환경변수 설정후 deploy하는거 꼭 잊지 마세요!
 
-
+<br>
 
 ### 2. EndPoint
 
@@ -46,7 +46,7 @@ https://my-netlify-site-name.netlify.app/youtube
 https://bigsaigon333.netlify.app/youtube
 ```
 
-
+<br>
 
 ### 3. Client-Side 사용법
 
@@ -54,16 +54,16 @@ https://bigsaigon333.netlify.app/youtube
 
 ```
 // Endpoint
-https://my-netlify-site-name.netlify.app/youtube
+https://my-netlify-site-name.netlify.app/youtube/v3
 
 // 🌟New Feature: dummy data를 반환하는 Endpoint🌟
-https://my-netlify-site-name.netlify.app/youtube/dummy
+https://my-netlify-site-name.netlify.app/youtube/v3/dummy
 
 // 예시
-https://bigsaigon333.netlify.app/youtube
+https://bigsaigon333.netlify.app/youtube/v3
 ```
 
-
+<br>
 
 **구체적인 Client-Side 사용법 예시**
 
@@ -88,7 +88,7 @@ try {
 }
 ```
 
-
+<br>
 
 ### 🔥 주의사항 🔥
 
@@ -98,7 +98,7 @@ Netlify Functions의 무료사용량 한도는 아래와 같습니다. Netlify �
 
 - 1달간 functions run time 100시간
 
-  
+<br>
 
 ### 🌟 New Feature: Dummy Data를 반환하는 Endpoint 추가 🌟
 
@@ -112,7 +112,60 @@ Youtube API를 사용하지 않아 제한량에 영향을 주지 않고, 서버�
 https://my-netlify-site-name.netlify.app/youtube/dummy
 ```
 
+<br>
 
+### 🛠 Fix: Fetch Error 메세지 속 API_KEY를 그대로 반환하는 에러 수정
+
+zych1751 님께서 유튜브 에러를 그대로 내려줄 경우 에러 메세지 속에 API_KEY가 포함되어 있어 API_KEY가 노출될 수 있는 점을 지적해주셨습니다.
+
+이에 JSON.stringify의 replacer로 API_KEY를 모두 빈 문자열("")으로 치환하는 함수를 전달하여, response의 body 내 API_KEY가 절대 포함되지 않도록 수정하였습니다.
+
+```javascript
+// stringify.js
+const keyReplacer = (_, value) => {
+  if (typeof value !== "string") {
+    return value;
+  }
+
+  return value.replace(process.env.API_KEY, "");
+};
+
+const stringify = (subject) => JSON.stringify(subject, keyReplacer, " ");
+
+module.exports = stringify;
+
+// youtube.js
+...
+try {
+  const response = await fetch(url);
+  const body = await response.json();
+
+  if (body.error) {
+    return {
+      statusCode: body.error.code,
+      ok: false,
+      headers,
+      body: stringify(body),
+    };
+  }
+
+  return {
+    statusCode: 200,
+    ok: true,
+    headers,
+    body: stringify(body),
+  };
+} catch (error) {
+  return {
+    statusCode: 400,
+    ok: false,
+    headers,
+    body: stringify(error),
+  };
+}
+```
+
+<br>
 
 더욱 상세한 설명은 아래의 블로그를 참고해주세요~!
 
