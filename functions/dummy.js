@@ -1,4 +1,5 @@
 const fetchDummySearchData = require("../dummy/fetch.js");
+const stringify = require("../utils/stringify.js");
 
 exports.handler = async () => {
   const headers = {
@@ -13,14 +14,14 @@ exports.handler = async () => {
       statusCode: 200,
       ok: true,
       headers,
-      body: JSON.stringify(body, null, " "),
+      body: stringify(body),
     };
   } catch (error) {
     return {
       statusCode: 400,
       ok: false,
       headers,
-      body: JSON.stringify(error, null, " "),
+      body: stringify(error),
     };
   }
 };

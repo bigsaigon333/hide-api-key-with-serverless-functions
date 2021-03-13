@@ -1,5 +1,6 @@
 const fetch = require("node-fetch");
 const querystring = require("querystring");
+const stringify = require("../utils/stringify.js");
 
 const GOOGLEAPIS_ORIGIN = "https://www.googleapis.com";
 const headers = {
@@ -8,16 +9,6 @@ const headers = {
   "Cache-Control": "max-age=86400",
   "Content-Type": "application/json; charset=utf-8",
 };
-
-const keyReplacer = (_, value) => {
-  if (typeof value !== "string") {
-    return value;
-  }
-
-  return value.replace(process.env.API_KEY, "");
-};
-
-const stringify = (subject) => JSON.stringify(subject, keyReplacer, " ");
 
 exports.handler = async (event) => {
   const { path, queryStringParameters } = event;
