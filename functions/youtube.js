@@ -13,6 +13,8 @@ exports.handler = async (event) => {
   const headers = {
     "Access-Control-Allow-Origin": process.env.HOST,
     Vary: "Origin",
+    "Cache-Control": "max-age=86400",
+    "Content-Type": "application/json; charset=utf-8",
   };
 
   try {
