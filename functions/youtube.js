@@ -1,25 +1,37 @@
 const fetch = require("node-fetch");
 const querystring = require("querystring");
 
+const GOOGLEAPIS_ORIGIN = "https://www.googleapis.com";
+const headers = {
+  "Access-Control-Allow-Origin": process.env.HOST,
+  Vary: "Origin",
+  "Cache-Control": "max-age=86400",
+  "Content-Type": "application/json; charset=utf-8",
+};
+
+const keyReplacer = (_, value) => {
+  if (typeof value !== "string") {
+    return value;
+  }
+
+  return value.replace(process.env.API_KEY, "");
+};
+
+const stringify = (subject) => JSON.stringify(subject, keyReplacer, " ");
+
 exports.handler = async (event) => {
   const { path, queryStringParameters } = event;
 
-  const YOUTUBE_ENDPOINT = "https://www.googleapis.com/youtube/v3";
-  const apiMethod = path.split("/").pop();
+  const url = new URL(path, GOOGLEAPIS_ORIGIN);
   const parameters = querystring.stringify({
     ...queryStringParameters,
     key: process.env.API_KEY,
   });
-  const headers = {
-    "Access-Control-Allow-Origin": process.env.HOST,
-    Vary: "Origin",
-    "Cache-Control": "max-age=86400",
-    "Content-Type": "application/json; charset=utf-8",
-  };
+
+  url.search = parameters;
 
   try {
-    const URI = `${YOUTUBE_ENDPOINT}/${apiMethod}?${parameters}`;
-    const response = await fetch(URI);
+    const response = await fetch(url);
     const body = await response.json();
 
     if (body.error) {
@@ -27,7 +39,7 @@ exports.handler = async (event) => {
         statusCode: body.error.code,
         ok: false,
         headers,
-        body: JSON.stringify(body, null, " "),
+        body: stringify(body),
       };
     }
 
@@ -35,14 +47,14 @@ exports.handler = async (event) => {
       statusCode: 200,
       ok: true,
       headers,
-      body: JSON.stringify(body, null, " "),
+      body: stringify(body),
     };
   } catch (error) {
     return {
       statusCode: 400,
       ok: false,
       headers,
-      body: JSON.stringify(error, null, " "),
+      body: stringify(error),
     };
   }
 };
