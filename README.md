@@ -37,30 +37,20 @@ serveless functions 중 Netlify Functions를 활용하였습니다. 따라서 ne
 
 <br>
 
-### 2. EndPoint
-
-```
-https://my-netlify-site-name.netlify.app/youtube
-
-// 예시
-https://bigsaigon333.netlify.app/youtube
-```
-
-<br>
-
-### 3. Client-Side 사용법
+### 2. Client-Side 사용법
 
 기존에는 Youtube API Endpoint 인 `https://www.googleapis.com/youtube/v3/search` 으로 직접 통신하였다면 이제부터는 방금 만든 Netlify Functions의 Endpoint와 통신하시면 됩니다.
 
 ```
+// 기존
+https://www.googleapis.com/youtube/v3/search
+
 // Endpoint
-https://my-netlify-site-name.netlify.app/youtube/v3
+https://my-netlify-site-name.netlify.app/youtube/v3/search
 
 // 🌟New Feature: dummy data를 반환하는 Endpoint🌟
-https://my-netlify-site-name.netlify.app/youtube/v3/dummy
+https://my-netlify-site-name.netlify.app/dummy/youtube/v3/search
 
-// 예시
-https://bigsaigon333.netlify.app/youtube/v3
 ```
 
 <br>
@@ -69,13 +59,23 @@ https://bigsaigon333.netlify.app/youtube/v3
 
 ```jsx
 try {
-  // 기존
-  // const URL = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=10&&q=${query}&key=${YOUR_OWN_API_KEY}`;
+  const ORIGINAL_HOST = "https://www.googleapis.com"; // 기존 유튜브 API 호스트
+  const REDIRECT_SERVER_HOST = "https://bigsaigon333.netlify.app"; // my own redirect server hostname
 
-  const YOUR_OWN_ENDPOINT = "https://my-netlify-site-name.netlify.app/youtube";
-  const URL = `${YOUR_OWN_ENDPOINT}/search?part=snippet&maxResults=10&&q=${query}`;
+  const url = new URL("youtube/search", REDIRECT_SERVER_HOST);
+  const parameters = new URLSearchParams({
+    part: "snippet",
+    type: "video",
+    maxResults: 10,
+    regionCode: "kr",
+    safeSearch: "strict",
+    pageToken: nextPageToken || "",
+    q: query,
+    // key: "Abdsklfulasdkf-d0f9"     // key를 절대로 포함해서 보내지 마세요!
+  });
+  url.search = parameters.toString();
 
-  const response = await fetch(URL);
+  const response = await fetch(url, { method: "GET" });
   const body = await response.json();
 
   if (!response.ok) {
@@ -109,7 +109,7 @@ Youtube API를 사용하지 않아 제한량에 영향을 주지 않고, 서버�
 
 ```
 // 🌟 New Feature: dummy data를 반환하는 Endpoint 🌟
-https://my-netlify-site-name.netlify.app/youtube/dummy
+https://my-netlify-site-name.netlify.app/dummy/youtube/v3
 ```
 
 <br>
