@@ -3,7 +3,7 @@ const $youtubeInput = document.querySelector("#youtube-input");
 const $dummyButton = document.querySelector("#dummy");
 
 const REAL_ENDPOINT = "/youtube/v3/search";
-const DUMMY_ENDPOINT = "/youtube/v3/dummy/search";
+const DUMMY_ENDPOINT = "dummy/youtube/v3/search";
 
 const testFetch = async (ENDPOINT, query = "코요태") => {
   try {
