@@ -114,15 +114,6 @@ https://my-netlify-site-name.netlify.app/dummy/youtube/v3
 
 <br>
 
-### 🌟 New Feature: 동일한 검색어로 검색시 1일 동안 cache! 🌟
-
-Response Header에 "Cache-Control": "max-age=86400" 을 설정하여, 동일한 검색어로 검색시 해당 내용을 1일 동안 cache하도록 하였습니다.
-따라서 동일한 검색어로 검색하시면 search 해도 API 할당량 100 차감되지 않습니다.
-
-※ cache를 안쓰시려면
-1, 크롬 Network 탭에서 Disable cache를 체크
-2, Request Header에 "Cache-Control": "no-store" 또는 "max-age=적당한\_시간(초)"을 추가하여 fetch 하세요!
-
 ### 🛠 Fix: Fetch Error 메세지 속 API_KEY를 그대로 반환하는 에러 수정
 
 zych1751 님께서 유튜브 에러를 그대로 내려줄 경우 에러 메세지 속에 API_KEY가 포함되어 있어 API_KEY가 노출될 수 있는 점을 지적해주셨습니다.
