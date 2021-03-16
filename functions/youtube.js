@@ -5,8 +5,6 @@ const stringify = require("../utils/stringify.js");
 const GOOGLEAPIS_ORIGIN = "https://www.googleapis.com";
 const headers = {
   "Access-Control-Allow-Origin": process.env.HOST,
-  Vary: "path",
-  "Cache-Control": "max-age=86400",
   "Content-Type": "application/json; charset=utf-8",
 };
 
