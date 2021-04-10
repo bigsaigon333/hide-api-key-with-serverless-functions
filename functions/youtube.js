@@ -9,7 +9,11 @@ const headers = {
 };
 
 exports.handler = async (event) => {
-  const { path, queryStringParameters } = event;
+  const {
+    path,
+    queryStringParameters,
+    headers: { referer },
+  } = event;
 
   const url = new URL(path, GOOGLEAPIS_ORIGIN);
   const parameters = querystring.stringify({
@@ -20,7 +24,7 @@ exports.handler = async (event) => {
   url.search = parameters;
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, { headers: { referer } });
     const body = await response.json();
 
     if (body.error) {
